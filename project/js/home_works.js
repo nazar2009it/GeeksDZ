@@ -84,3 +84,4 @@ resetBtn.addEventListener('click', () => {
     counter = 0
     renderCounter()
 })
+
