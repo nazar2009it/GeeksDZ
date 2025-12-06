@@ -85,3 +85,39 @@ resetBtn.addEventListener('click', () => {
     renderCounter()
 })
 
+
+const xhr = new XMLHttpRequest();
+xhr.open('GET', '../data/characters.json');
+xhr.setRequestHeader('Content-type', 'application/json');
+xhr.send();
+
+xhr.onload = () => {
+    const data = JSON.parse(xhr.response);
+
+    const block = document.querySelector('.characters-list');
+    block.innerHTML = "";
+
+    data.forEach(item => {
+        block.innerHTML += `
+            <div class="card">
+                <img src="${item.photo}" alt="${item.name}" />
+                <h3>${item.name}</h3>
+                <p>Возраст: ${item.age}</p>
+            </div>
+        `;
+    });
+};
+function getJSON() {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', '../data/data.json');
+    xhr.responseType = 'json';
+    xhr.send();
+
+    xhr.onload = () => {
+        console.log(xhr.response);
+    };
+}
+
+getJSON();
+
+
