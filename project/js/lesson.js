@@ -36,3 +36,40 @@ setInterval(() => {
     hideTabContent()
     showTabContent(tabIndex)
 }, 3000)
+const rates = {
+    som: 1,    
+    usd: 87,   
+    eur: 94    
+};
+const inputs = document.querySelectorAll('.inner_converter input');
+
+inputs.forEach(input => {
+    input.addEventListener('input', () => {
+        const fromCurrency = input.id;             
+        const value = parseFloat(input.value);
+        if (isNaN(value)) {
+            inputs.forEach(i => {
+                if (i !== input) i.value = '';
+            });
+            return;
+        }
+        let inSom;
+        if (fromCurrency === 'som') {
+            inSom = value;
+        } else {
+            inSom = value * rates[fromCurrency];
+        }
+        inputs.forEach(other => {
+            if (other === input) return;
+            const toCurrency = other.id;
+            let result;
+            if (toCurrency === 'som') {
+                result = inSom;
+            } else {
+                result = inSom / rates[toCurrency];
+            }
+            other.value = result.toFixed(2);
+        });
+    });
+});
+//если что извените сделал без data.json не хотел его добовлять
