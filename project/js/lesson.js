@@ -72,4 +72,43 @@ inputs.forEach(input => {
         });
     });
 });
-//если что извените сделал без data.json не хотел его добовлять
+const card = document.querySelector(".card");
+const prevBtn = document.querySelector("#btn-prev");
+const nextBtn = document.querySelector("#btn-next");
+const BASE_URL = "https://jsonplaceholder.typicode.com/todos";
+const MAX_ID = 200;
+let currentId = 1;
+const normalizeId = (id) => {
+  if (id > MAX_ID) return 1;
+  if (id < 1) return MAX_ID;
+  return id;
+};
+const fetchPost = async (id) => {
+  const res = await fetch(`${BASE_URL}/${id}`);
+  if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+  return res.json();
+};
+const renderCard = (post) => {
+  card.innerHTML = `
+    <h4>${post.id}. ${post.title}</h4>
+    <p>${post.body}</p>
+  `;
+};
+const loadCard = async (id) => {
+  try {
+    const normalized = normalizeId(id);
+    const post = await fetchPost(normalized);
+    currentId = normalized;
+    renderCard(post);
+  } catch (e) {
+    console.error("Card load error:", e);
+    card.innerHTML = "<p>Ошибка загрузки карточки</p>";
+  }
+};
+loadCard(currentId);
+nextBtn.addEventListener("click", () => loadCard(currentId + 1));
+prevBtn.addEventListener("click", () => loadCard(currentId - 1));
+fetch(BASE_URL)
+  .then((res) => res.json())
+  .then((data) => console.log("Posts list:", data))
+  .catch((err) => console.error("Posts fetch error:", err));
